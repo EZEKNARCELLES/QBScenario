@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Day in the Life of a Bookkeeper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .scenario-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        .scenario-header {
+            background: linear-gradient(135deg, #2b67a1 0%, #1e4d7a 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scenario-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .scenario-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scenario-header .subtitle {
+            font-size: 18px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scenario-header .emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .progress-tracker {
+            background: #f8f9fb;
+            padding: 25px 40px;
+            border-bottom: 1px solid #e0e4e8;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e0e4e8;
+            z-index: 0;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            background: #2b67a1;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e0e4e8;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .step-circle {
+            border-color: #2b67a1;
+            background: #2b67a1;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .progress-step.completed .step-circle {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+
+        .progress-step.completed .step-circle::before {
+            content: '✓';
+            font-size: 18px;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .progress-step.active .step-label {
+            color: #2b67a1;
+        }
+
+        .scenario-content {
+            padding: 50px;
+            min-height: 400px;
+            display: none;
+        }
+
+        .scenario-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .intro-screen {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .intro-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .intro-screen h2 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .intro-screen p {
+            font-size: 17px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .step-content h2 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-number {
+            background: #2b67a1;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .situation-card {
+            background: linear-gradient(135deg, #f8f9fb 0%, #f0f3f7 100%);
+            border-left: 5px solid #2b67a1;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .situation-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .situation-label {
+            color: #2b67a1;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .situation-text {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .task-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .choices {
+            display: grid;
+            gap: 15px;
+        }
+
+        .choice {
+            background: white;
+            border: 2px solid #e0e4e8;
+            border-radius: 12px;
+            padding: 22px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background: linear-gradient(90deg, rgba(43, 103, 161, 0.05) 0%, transparent 100%);
+            transition: width 0.3s ease;
+        }
+
+        .choice:hover {
+            border-color: #2b67a1;
+            transform: translateX(8px);
+            box-shadow: 0 4px 12px rgba(43, 103, 161, 0.15);
+        }
+
+        .choice:hover::before {
+            width: 100%;
+        }
+
+        .choice-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: #f0f5fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .choice:hover .choice-icon {
+            background: #2b67a1;
+            transform: scale(1.1);
+        }
+
+        .choice-content {
+            flex: 1;
+        }
+
+        .choice-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .choice-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .choice.correct {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f0fdf4 0%, #e8f9ed 100%);
+            animation: correctPulse 0.6s ease;
+        }
+
+        .choice.incorrect {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #fef2f2 0%, #fce8e8 100%);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .choice.correct .choice-icon {
+            background: #28a745;
+            color: white;
+        }
+
+        .choice.incorrect .choice-icon {
+            background: #dc3545;
+            color: white;
+        }
+
+        .choice.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            line-height: 1.7;
+            animation: slideDown 0.4s ease;
+        }
+
+        .feedback.show {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback.correct {
+            background: linear-gradient(135deg, #f0fdf4 0%, #e8f9ed 100%);
+            border-left: 5px solid #28a745;
+            color: #1e5f30;
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #fef2f2 0%, #fce8e8 100%);
+            border-left: 5px solid #dc3545;
+            color: #7f1d1d;
+        }
+
+        .feedback-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .feedback-content {
+            flex: 1;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 35px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 16px 36px;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #2b67a1;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #234f7d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(43, 103, 161, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .completion-screen {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .completion-icon {
+            font-size: 100px;
+            margin-bottom: 25px;
+            animation: bounce 1s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .completion-screen h2 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .completion-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 35px;
+            line-height: 1.8;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #f8f9fb 0%, #f0f3f7 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 35px;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2b67a1;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .summary-items {
+            display: grid;
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 18px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid #28a745;
+        }
+
+        .summary-item-number {
+            background: #28a745;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .summary-item-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .summary-item-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .summary-item-action {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .scenario-header {
+                padding: 30px 20px;
+            }
+
+            .scenario-header h1 {
+                font-size: 24px;
+            }
+
+            .scenario-content {
+                padding: 30px 20px;
+            }
+
+            .progress-tracker {
+                padding: 20px;
+            }
+
+            .step-label {
+                font-size: 10px;
+            }
+
+            .choice {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .choice-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scenario-container">
+        <div class="scenario-header">
+            <span class="emoji">💼</span>
+            <h1>A Day in the Life of a Bookkeeper</h1>
+            <p class="subtitle">Make the right decisions to complete your daily workflow</p>
+        </div>
+
+        <div class="progress-tracker">
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-line-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-step active" data-step="0">
+                    <div class="step-circle">🏁</div>
+                    <div class="step-label">Start</div>
+                </div>
+                <div class="progress-step" data-step="1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Invoice</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Bill</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Report</div>
+                </div>
+                <div class="progress-step" data-step="5">
+                    <div class="step-circle">🎯</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intro Screen -->
+        <div class="scenario-content active" id="intro">
+            <div class="intro-screen">
+                <div class="intro-icon">☕</div>
+                <h2>Welcome to Your Workday!</h2>
+                <p>It's 9:00 AM and you've just arrived at the office. As the company bookkeeper, you'll face various situations throughout the day that require you to record transactions in QuickBooks Desktop.</p>
+                <p>Your goal is to make the correct decision for each scenario you encounter. Are you ready to start your day?</p>
+                <div class="button-container">
+                    <button class="btn btn-primary" onclick="startScenario()">
+                        Start My Day →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Invoice Request -->
+        <div class="scenario-content" id="step1">
+            <div class="step-content">
+                <h2><span class="step-number">1</span> Morning Task</h2>
+                <div class="situation-card">
+                    <div class="situation-icon">📧</div>
+                    <div class="situation-label">9:30 AM - Email Received</div>
+                    <div class="situation-text">
+                        Your sales team forwards you an email: "Hi! We just closed a deal with Martinez Construction Corp. They've ordered $5,500 worth of office furniture. They'll pay us in 30 days. Can you process this?"
+                    </div>
+                </div>
+                <div class="task-label">What should you create in QuickBooks?</div>
+                <div class="choices">
+                    <div class="choice" onclick="selectChoice(1, 'invoice')">
+                        <div class="choice-icon">📄</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Create Invoice</div>
+                            <div class="choice-desc">Record a sale with payment due later</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(1, 'sales-receipt')">
+                        <div class="choice-icon">🧾</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Create Sales Receipt</div>
+                            <div class="choice-desc">Record immediate payment at time of sale</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(1, 'estimate')">
+                        <div class="choice-icon">📋</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Create Estimate</div>
+                            <div class="choice-desc">Provide a quote for potential sale</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(1, 'bill')">
+                        <div class="choice-icon">💳</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Enter Bill</div>
+                            <div class="choice-desc">Record money you owe to a vendor</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feedback">
+                    <div class="feedback-icon"></div>
+                    <div class="feedback-content">
+                        <div class="feedback-title"></div>
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-primary" id="nextBtn1" onclick="nextStep(1)" disabled>
+                        Continue →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Vendor Bill -->
+        <div class="scenario-content" id="step2">
+            <div class="step-content">
+                <h2><span class="step-number">2</span> Midday Task</h2>
+                <div class="situation-card">
+                    <div class="situation-icon">📬</div>
+                    <div class="situation-label">11:00 AM - Mail Delivered</div>
+                    <div class="situation-text">
+                        The receptionist brings you a bill from ABC Office Supplies for $850 worth of printer paper and toner. The payment is due in 15 days. The supplies have already been received and verified.
+                    </div>
+                </div>
+                <div class="task-label">What should you do in QuickBooks?</div>
+                <div class="choices">
+                    <div class="choice" onclick="selectChoice(2, 'purchase-order')">
+                        <div class="choice-icon">📝</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Create Purchase Order</div>
+                            <div class="choice-desc">Order items from vendor (not yet received)</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(2, 'enter-bill')">
+                        <div class="choice-icon">📑</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Enter Bill</div>
+                            <div class="choice-desc">Record amount owed to vendor for received goods</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(2, 'write-check')">
+                        <div class="choice-icon">✍️</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Write Check</div>
+                            <div class="choice-desc">Make immediate payment to vendor</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(2, 'invoice')">
+                        <div class="choice-icon">📄</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Create Invoice</div>
+                            <div class="choice-desc">Bill a customer for goods or services</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feedback">
+                    <div class="feedback-icon"></div>
+                    <div class="feedback-content">
+                        <div class="feedback-title"></div>
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-primary" id="nextBtn2" onclick="nextStep(2)" disabled>
+                        Continue →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Receive Payment -->
+        <div class="scenario-content" id="step3">
+            <div class="step-content">
+                <h2><span class="step-number">3</span> Afternoon Task</h2>
+                <div class="situation-card">
+                    <div class="situation-icon">💰</div>
+                    <div class="situation-label">2:00 PM - Payment Received</div>
+                    <div class="situation-text">
+                        Great news! Johnson Electronics just sent a check for $3,200 to pay off their outstanding invoice from last month (Invoice #1047). The check has been verified and is ready to be recorded.
+                    </div>
+                </div>
+                <div class="task-label">How do you record this in QuickBooks?</div>
+                <div class="choices">
+                    <div class="choice" onclick="selectChoice(3, 'sales-receipt')">
+                        <div class="choice-icon">🧾</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Create Sales Receipt</div>
+                            <div class="choice-desc">Record a new sale with immediate payment</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(3, 'receive-payment')">
+                        <div class="choice-icon">💵</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Receive Payment</div>
+                            <div class="choice-desc">Apply payment to existing customer invoice</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(3, 'deposit')">
+                        <div class="choice-icon">🏦</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Make Deposit</div>
+                            <div class="choice-desc">Record money going into bank account</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(3, 'credit-memo')">
+                        <div class="choice-icon">📋</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Create Credit Memo</div>
+                            <div class="choice-desc">Issue credit for returned goods or refunds</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feedback">
+                    <div class="feedback-icon"></div>
+                    <div class="feedback-content">
+                        <div class="feedback-title"></div>
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-primary" id="nextBtn3" onclick="nextStep(3)" disabled>
+                        Continue →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Management Report -->
+        <div class="scenario-content" id="step4">
+            <div class="step-content">
+                <h2><span class="step-number">4</span> End of Day Task</h2>
+                <div class="situation-card">
+                    <div class="situation-icon">👔</div>
+                    <div class="situation-label">4:30 PM - Manager Request</div>
+                    <div class="situation-text">
+                        Your manager stops by your desk: "I need to prepare for tomorrow's board meeting. Can you pull a report showing our total revenue, expenses, and net profit for this month? I need to see how we're performing financially."
+                    </div>
+                </div>
+                <div class="task-label">Which report should you generate?</div>
+                <div class="choices">
+                    <div class="choice" onclick="selectChoice(4, 'balance-sheet')">
+                        <div class="choice-icon">⚖️</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Balance Sheet</div>
+                            <div class="choice-desc">Shows assets, liabilities, and equity at a point in time</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(4, 'ar-aging')">
+                        <div class="choice-icon">📊</div>
+                        <div class="choice-content">
+                            <div class="choice-title">A/R Aging Summary</div>
+                            <div class="choice-desc">Shows outstanding customer invoices by age</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(4, 'profit-loss')">
+                        <div class="choice-icon">📈</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Profit & Loss Report</div>
+                            <div class="choice-desc">Shows revenue, expenses, and net income over time</div>
+                        </div>
+                    </div>
+                    <div class="choice" onclick="selectChoice(4, 'cash-flow')">
+                        <div class="choice-icon">💸</div>
+                        <div class="choice-content">
+                            <div class="choice-title">Statement of Cash Flows</div>
+                            <div class="choice-desc">Shows cash movement in/out of business</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feedback">
+                    <div class="feedback-icon"></div>
+                    <div class="feedback-content">
+                        <div class="feedback-title"></div>
+                        <div class="feedback-text"></div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-primary" id="nextBtn4" onclick="nextStep(4)" disabled>
+                        Complete Day →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="scenario-content" id="completion">
+            <div class="completion-screen">
+                <div class="completion-icon">🎉</div>
+                <h2>Outstanding Work!</h2>
+                <p class="completion-message">
+                    Congratulations! You've successfully completed a full bookkeeping workflow in QuickBooks Desktop. You handled every transaction correctly and demonstrated excellent understanding of QuickBooks fundamentals.
+                </p>
+                <div class="summary-box">
+                    <div class="summary-title">📋 Today's Completed Tasks</div>
+                    <div class="summary-items">
+                        <div class="summary-item">
+                            <div class="summary-item-number">1</div>
+                            <div class="summary-item-text">
+                                <div class="summary-item-label">9:30 AM - Customer Sale</div>
+                                <div class="summary-item-action">Created Invoice for Martinez Construction</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-item-number">2</div>
+                            <div class="summary-item-text">
+                                <div class="summary-item-label">11:00 AM - Vendor Bill</div>
+                                <div class="summary-item-action">Entered Bill from ABC Office Supplies</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-item-number">3</div>
+                            <div class="summary-item-text">
+                                <div class="summary-item-label">2:00 PM - Customer Payment</div>
+                                <div class="summary-item-action">Received Payment from Johnson Electronics</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-item-number">4</div>
+                            <div class="summary-item-text">
+                                <div class="summary-item-label">4:30 PM - Management Request</div>
+                                <div class="summary-item-action">Generated Profit & Loss Report</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="completion-message">
+                    You've demonstrated that you understand when to use different transaction types and reports in QuickBooks Desktop. These are essential skills for any successful bookkeeper!
+                </p>
+                <div class="button-container">
+                    <button class="btn btn-primary" onclick="restartScenario()">
+                        🔄 Start Another Day
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 4;
+        let decisions = [];
+
+        const scenarioData = {
+            1: {
+                correct: 'invoice',
+                correctFeedback: {
+                    title: 'Perfect Choice!',
+                    text: 'You correctly created an Invoice. Since the customer will pay in 30 days (not immediately), an invoice is the right transaction type. This records the sale and creates an account receivable.'
+                },
+                incorrectFeedback: {
+                    title: 'Not Quite',
+                    text: 'The correct answer is Invoice. A Sales Receipt is for immediate payment, an Estimate is just a quote, and a Bill is for money you owe vendors. Since payment is due in 30 days, use an Invoice to record the sale and account receivable.'
+                }
+            },
+            2: {
+                correct: 'enter-bill',
+                correctFeedback: {
+                    title: 'Excellent!',
+                    text: 'You correctly chose to Enter Bill. Since you received the supplies and have a bill with payment due later, entering the bill records what you owe (accounts payable) and tracks it until you pay.'
+                },
+                incorrectFeedback: {
+                    title: 'Not Quite',
+                    text: 'The correct answer is Enter Bill. A Purchase Order is for ordering (not receiving), Write Check is for immediate payment, and Invoice is for customer sales. Since you received goods with payment due later, enter the bill to record accounts payable.'
+                }
+            },
+            3: {
+                correct: 'receive-payment',
+                correctFeedback: {
+                    title: 'Great Job!',
+                    text: 'You correctly chose Receive Payment. This applies the check to the existing invoice, reduces accounts receivable, and properly tracks the payment against Invoice #1047.'
+                },
+                incorrectFeedback: {
+                    title: 'Not Quite',
+                    text: 'The correct answer is Receive Payment. Sales Receipt is for new sales, Deposit doesn\'t link to the invoice, and Credit Memo is for returns/refunds. Since this pays an existing invoice, use Receive Payment to properly apply it.'
+                }
+            },
+            4: {
+                correct: 'profit-loss',
+                correctFeedback: {
+                    title: 'Perfect!',
+                    text: 'You correctly selected the Profit & Loss Report. This report shows total revenue, all expenses, and calculates net profit/loss over a period—exactly what your manager needs for the board meeting.'
+                },
+                incorrectFeedback: {
+                    title: 'Not Quite',
+                    text: 'The correct answer is Profit & Loss Report. The Balance Sheet shows financial position, not performance. A/R Aging shows unpaid invoices, and Cash Flow shows cash movement. For revenue, expenses, and profit, always use Profit & Loss.'
+                }
+            }
+        };
+
+        function startScenario() {
+            document.getElementById('intro').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+            currentStep = 1;
+            updateProgress();
+        }
+
+        function selectChoice(step, choice) {
+            const stepData = scenarioData[step];
+            const isCorrect = choice === stepData.correct;
+            
+            // Disable all choices
+            const choices = document.querySelectorAll(`#step${step} .choice`);
+            choices.forEach(c => {
+                c.classList.add('disabled');
+                if (c.getAttribute('onclick').includes(choice)) {
+                    c.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (isCorrect) {
+                        c.querySelector('.choice-icon').textContent = '✓';
+                    } else {
+                        c.querySelector('.choice-icon').textContent = '✗';
+                    }
+                }
+                // Show correct answer if user chose wrong
+                if (!isCorrect && c.getAttribute('onclick').includes(stepData.correct)) {
+                    c.classList.add('correct');
+                    c.querySelector('.choice-icon').textContent = '✓';
+                }
+            });
+
+            // Show feedback
+            const feedback = document.querySelector(`#step${step} .feedback`);
+            const feedbackData = isCorrect ? stepData.correctFeedback : stepData.incorrectFeedback;
+            
+            feedback.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+            feedback.querySelector('.feedback-icon').textContent = isCorrect ? '✅' : '❌';
+            feedback.querySelector('.feedback-title').textContent = feedbackData.title;
+            feedback.querySelector('.feedback-text').textContent = feedbackData.text;
+
+            // Enable next button
+            document.getElementById(`nextBtn${step}`).disabled = false;
+
+            // Store decision
+            decisions[step - 1] = { step, choice, isCorrect };
+        }
+
+        function nextStep(step) {
+            document.getElementById(`step${step}`).classList.remove('active');
+            
+            if (step < totalSteps) {
+                currentStep = step + 1;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                updateProgress();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function updateProgress() {
+            // Update step indicators
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                if (index < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+
+            // Update progress bar
+            const progress = (currentStep / 5) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showCompletion() {
+            document.getElementById('completion').classList.add('active');
+            currentStep = 5;
+            updateProgress();
+        }
+
+        function restartScenario() {
+            // Reset all variables
+            currentStep = 0;
+            decisions = [];
+
+            // Reset all steps
+            document.querySelectorAll('.scenario-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Reset all choices
+            document.querySelectorAll('.choice').forEach(choice => {
+                choice.classList.remove('selected', 'correct', 'incorrect', 'disabled');
+                const icon = choice.querySelector('.choice-icon');
+                const onclick = choice.getAttribute('onclick');
+                if (onclick.includes('invoice')) icon.textContent = '📄';
+                else if (onclick.includes('sales-receipt')) icon.textContent = '🧾';
+                else if (onclick.includes('estimate')) icon.textContent = '📋';
+                else if (onclick.includes('bill')) icon.textContent = '💳';
+                else if (onclick.includes('purchase-order')) icon.textContent = '📝';
+                else if (onclick.includes('enter-bill')) icon.textContent = '📑';
+                else if (onclick.includes('write-check')) icon.textContent = '✍️';
+                else if (onclick.includes('receive-payment')) icon.textContent = '💵';
+                else if (onclick.includes('deposit')) icon.textContent = '🏦';
+                else if (onclick.includes('credit-memo')) icon.textContent = '📋';
+                else if (onclick.includes('balance-sheet')) icon.textContent = '⚖️';
+                else if (onclick.includes('ar-aging')) icon.textContent = '📊';
+                else if (onclick.includes('profit-loss')) icon.textContent = '📈';
+                else if (onclick.includes('cash-flow')) icon.textContent = '💸';
+            });
+
+            // Hide all feedback
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.classList.remove('show', 'correct', 'incorrect');
+            });
+
+            // Disable all next buttons
+            for (let i = 1; i <= totalSteps; i++) {
+                document.getElementById(`nextBtn${i}`).disabled = true;
+            }
+
+            // Show intro
+            document.getElementById('intro').classList.add('active');
+            
+            // Reset progress
+            updateProgress();
+        }
+    </script>
+</body>
+</html>
